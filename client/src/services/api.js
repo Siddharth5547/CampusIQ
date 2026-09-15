@@ -1,6 +1,23 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.port === '5173' ? '/api' : 'http://localhost:5000/api');
+const getBaseUrl = () => {
+  // 1. Explicit production or custom API URL from environment variable
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // 2. Local Vite development server proxy
+  if (typeof window !== 'undefined' && window.location.port === '5173') {
+    return '/api';
+  }
+  // 3. Deployed production site (same origin /api)
+  if (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')) {
+    return '/api';
+  }
+  // 4. Default local development backend
+  return 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,

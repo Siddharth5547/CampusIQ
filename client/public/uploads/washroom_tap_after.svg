@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="bg_clean" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14211d" />
+      <stop offset="100%" stop-color="#0b1411" />
+    </linearGradient>
+    <linearGradient id="chrome" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#edf2f7" />
+      <stop offset="50%" stop-color="#a0aec0" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg_clean)" />
+  <!-- Clean Tiles grid -->
+  <path d="M 0,100 L 600,100 M 0,200 L 600,200 M 0,300 L 600,300 M 150,0 L 150,400 M 300,0 L 300,400 M 450,0 L 450,400" stroke="#1f3b30" stroke-width="1.5" opacity="0.6"/>
+  <!-- New Chrome Tap -->
+  <rect x="275" y="80" width="50" height="130" rx="10" fill="url(#chrome)"/>
+  <rect x="235" y="150" width="130" height="28" rx="8" fill="url(#chrome)"/>
+  <circle cx="300" cy="110" r="14" fill="#38a169"/>
+  <!-- Polished clean sink basin -->
+  <ellipse cx="300" cy="350" rx="130" ry="24" fill="#1c3329" stroke="#2f855a" stroke-width="2"/>
+  <!-- Sparkles -->
+  <path d="M 230,140 L 235,148 L 243,153 L 235,158 L 230,166 L 225,158 L 217,153 L 225,148 Z" fill="#48bb78"/>
+  <path d="M 370,145 L 374,151 L 380,155 L 374,159 L 370,165 L 366,159 L 360,155 L 366,151 Z" fill="#38a169"/>
+  <path d="M 310,95 L 313,100 L 318,103 L 313,106 L 310,111 L 307,106 L 302,103 L 307,100 Z" fill="#68d391"/>
+  <!-- Badge -->
+  <rect x="24" y="24" width="130" height="34" rx="8" fill="#38a169" fill-opacity="0.2" stroke="#38a169" stroke-width="1.5"/>
+  <text x="89" y="46" fill="#68d391" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle">AFTER REPAIR ✓</text>
+  <text x="300" y="30" fill="#9ae6b4" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">Heavy-duty commercial brass-cartridge mixer installed &amp; tested</text>
+</svg>

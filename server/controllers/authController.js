@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'campuscare_super_secret_jwt_key_2024_change_in_production', {
     expiresIn: process.env.JWT_EXPIRE || '7d'
   });
 };
@@ -12,6 +13,13 @@ const generateToken = (id) => {
 // @access  Public
 const register = async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database connection unavailable. Please ensure MONGODB_URI is configured in environment variables.'
+      });
+    }
+
     const { name, email, password, role, department, studentId, phone } = req.body;
 
     // Validate required fields
@@ -68,6 +76,13 @@ const register = async (req, res, next) => {
 // @access  Public
 const login = async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database connection unavailable. Please ensure MONGODB_URI is configured in environment variables.'
+      });
+    }
+
     const { email, password } = req.body;
 
     if (!email || !password) {

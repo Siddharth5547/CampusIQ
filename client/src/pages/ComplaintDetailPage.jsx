@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import {
   getPriorityClass, getStatusClass, getStatusColor, getCategoryIcon,
-  formatDateTime, timeAgo, getSlaTimeRemaining, CATEGORIES, PRIORITIES, STATUSES, LOCATIONS
+  formatDateTime, timeAgo, getSlaTimeRemaining, CATEGORIES, PRIORITIES, STATUSES, LOCATIONS,
+  getImageUrl
 } from '../utils/helpers';
 import toast from 'react-hot-toast';
 
@@ -461,8 +462,8 @@ const ComplaintDetailPage = () => {
                     <Sparkles className="w-3.5 h-3.5 text-[#8A9A5B]" /> Verified Resolution Proof (Before vs After)
                   </h4>
                   <BeforeAfterSlider
-                    beforeImage={beforeImg.startsWith('http') ? beforeImg : `http://localhost:5000${beforeImg}`}
-                    afterImage={afterImg.startsWith('http') ? afterImg : `http://localhost:5000${afterImg}`}
+                    beforeImage={getImageUrl(beforeImg)}
+                    afterImage={getImageUrl(afterImg)}
                   />
                 </div>
               ) : beforeImg ? (
@@ -472,7 +473,7 @@ const ComplaintDetailPage = () => {
                   </h4>
                   <div className="rounded-xl overflow-hidden border border-[#DEDAD3] max-h-72 bg-[#F0EBE6]">
                     <img
-                      src={beforeImg.startsWith('http') ? beforeImg : `http://localhost:5000${beforeImg}`}
+                      src={getImageUrl(beforeImg)}
                       alt="Defect"
                       className="w-full h-full object-contain"
                     />

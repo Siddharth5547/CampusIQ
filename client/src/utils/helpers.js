@@ -142,3 +142,16 @@ export const truncate = (str, len = 80) => {
   if (!str) return '';
   return str.length > len ? str.slice(0, len) + '...' : str;
 };
+
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl) {
+    const baseUrl = apiUrl.replace(/\/api\/?$/, '');
+    return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+  }
+  return imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+};

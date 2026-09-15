@@ -22,13 +22,19 @@ const allowedOrigins = [
   'http://localhost:5000',
   'http://127.0.0.1:5000',
   'http://localhost:3000',
+  'https://campusiq-tawny.vercel.app',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.startsWith('http://localhost:') ||
+      origin.startsWith('http://127.0.0.1:') ||
+      origin.endsWith('.vercel.app')
+    ) {
       return callback(null, true);
     }
     return callback(null, true);
@@ -56,6 +62,33 @@ app.get(['/health', '/api/health'], (req, res) => {
   });
 });
 
+// Connect to MongoDB and start server
+let isConnected = false;
+const connectDB = async () => {
+  if (isConnected || mongoose.connection.readyState === 1) {
+    return;
+  }
+  const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/campuscare';
+  try {
+    const conn = await mongoose.connect(MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+    isConnected = true;
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ MongoDB connection error: ${error.message}`);
+    console.log('⚠️  Running without database. Some features will not work.');
+  }
+};
+
+// Ensure database connection for requests (vital for serverless environments)
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
+  next();
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
@@ -70,26 +103,15 @@ app.use('*', (req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-// Connect to MongoDB and start server
-const connectDB = async () => {
-  const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/campuscare';
-  try {
-    const conn = await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 10000,
+// In standalone / development environments, start HTTP listener
+if (!process.env.VERCEL) {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 CampusCare server running on port ${PORT}`);
+      console.log(`📊 API available at http://localhost:${PORT}/api`);
+      console.log(`🏥 Health check: http://localhost:${PORT}/health`);
     });
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB connection error: ${error.message}`);
-    console.log('⚠️  Running without database. Some features will not work.');
-  }
-};
-
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 CampusCare server running on port ${PORT}`);
-    console.log(`📊 API available at http://localhost:${PORT}/api`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/health`);
   });
-});
+}
 
 module.exports = app;
