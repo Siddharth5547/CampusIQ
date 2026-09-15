@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 
 const User = require('../models/User');
 const Complaint = require('../models/Complaint');
 const Notification = require('../models/Notification');
 const Feedback = require('../models/Feedback');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/campuscare';
+const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/campuscare';
 
 const users = [
   {
