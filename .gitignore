@@ -36,6 +36,7 @@ Thumbs.db
 .eslintcache
 .cache/
 .temp/
+.vercel/
 
 # Environment variables & secrets (keep .env.example)
 .env
@@ -48,3 +49,5 @@ Thumbs.db
 **/.env.*.local
 !.env.example
 !**/.env.example
+
+.vercel
