@@ -6,6 +6,8 @@ import {
   MapPin, Tag, Upload, ArrowRight, ArrowBigUp, Clock,
   Star, CheckCheck, MessageSquare, ExternalLink
 } from 'lucide-react';
+import washroomTapBefore from '../assets/washroom_tap_before.svg';
+import washroomTapAfter from '../assets/washroom_tap_after.svg';
 
 const WORKFLOW_STEPS = [
   {
@@ -79,7 +81,7 @@ const WORKFLOW_STEPS = [
     subtitle: 'Before-repair photo attached for technician verification.',
     screen: {
       type: 'upload',
-      imagePreview: '/uploads/washroom_tap_before.svg',
+      imagePreview: washroomTapBefore,
       fileSize: '1.4 MB · Verified'
     }
   },
@@ -178,8 +180,8 @@ const WORKFLOW_STEPS = [
     subtitle: 'High-resolution photographic proof mandatory before closing.',
     screen: {
       type: 'proof',
-      before: '/uploads/washroom_tap_before.svg',
-      after: '/uploads/washroom_tap_after.svg'
+      before: washroomTapBefore,
+      after: washroomTapAfter
     }
   },
   {

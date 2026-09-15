@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e2430" />
+      <stop offset="100%" stop-color="#0f131a" />
+    </linearGradient>
+    <linearGradient id="pipe" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#718096" />
+      <stop offset="100%" stop-color="#4a5568" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)" />
+  <!-- Tiles grid -->
+  <path d="M 0,100 L 600,100 M 0,200 L 600,200 M 0,300 L 600,300 M 150,0 L 150,400 M 300,0 L 300,400 M 450,0 L 450,400" stroke="#2d3748" stroke-width="1.5" opacity="0.6"/>
+  <!-- Broken Tap -->
+  <rect x="270" y="80" width="60" height="120" rx="8" fill="url(#pipe)"/>
+  <rect x="240" y="160" width="120" height="30" rx="6" fill="#cbd5e0" transform="rotate(-12 300 175)"/>
+  <!-- Crack line -->
+  <path d="M 285,165 L 300,180 L 295,195 L 310,210" stroke="#e53e3e" stroke-width="3" fill="none"/>
+  <!-- Dripping water spray -->
+  <path d="M 295,190 Q 250,260 210,360 M 305,195 Q 310,280 320,380 M 315,190 Q 370,250 410,350" stroke="#4299e1" stroke-width="3.5" stroke-dasharray="6,4" fill="none" opacity="0.85"/>
+  <!-- Water puddle -->
+  <ellipse cx="300" cy="360" rx="140" ry="25" fill="#3182ce" opacity="0.5"/>
+  <ellipse cx="300" cy="360" rx="90" ry="14" fill="#63b3ed" opacity="0.7"/>
+  <!-- Badge -->
+  <rect x="24" y="24" width="140" height="34" rx="8" fill="#e53e3e" fill-opacity="0.2" stroke="#e53e3e" stroke-width="1.5"/>
+  <text x="94" y="46" fill="#fc8181" font-family="system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle">BEFORE REPAIR</text>
+  <text x="300" y="30" fill="#a0aec0" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">Broken washroom mixer tap with high-pressure leakage</text>
+</svg>

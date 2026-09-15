@@ -12,6 +12,8 @@ import BeforeAfterSlider from '../components/ui/BeforeAfterSlider';
 import CampusHealthScoreCard from '../components/ui/CampusHealthScoreCard';
 import CampusGridAnimation from '../components/CampusGridAnimation';
 import ProductDemoModal from '../components/ProductDemoModal';
+import washroomTapBefore from '../assets/washroom_tap_before.svg';
+import washroomTapAfter from '../assets/washroom_tap_after.svg';
 
 // Signature Complaint Transformation Steps
 const LIFECYCLE_STAGES = [
@@ -639,8 +641,8 @@ const LandingPage = () => {
 
         <div className="max-w-3xl mx-auto">
           <BeforeAfterSlider
-            beforeImage="/uploads/washroom_tap_before.svg"
-            afterImage="/uploads/washroom_tap_after.svg"
+            beforeImage={washroomTapBefore}
+            afterImage={washroomTapAfter}
           />
         </div>
       </section>

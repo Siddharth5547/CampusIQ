@@ -9,7 +9,8 @@ const auth = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const jwtSecret = process.env.JWT_SECRET || 'campuscare_super_secret_jwt_key_2024_change_in_production';
+    const decoded = jwt.verify(token, jwtSecret);
 
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {

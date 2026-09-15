@@ -68,16 +68,30 @@ const connectDB = async () => {
   if (isConnected || mongoose.connection.readyState === 1) {
     return;
   }
-  const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/campuscare';
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+  if (!mongoUri) {
+    if (isProd) {
+      console.error('❌ MONGODB_URI is not configured in environment variables. Database connection aborted.');
+      return;
+    }
+    console.warn('⚠️  MONGODB_URI not provided. Falling back to local MongoDB for development.');
+  }
+
+  const targetUri = mongoUri || 'mongodb://localhost:27017/campuscare';
+
   try {
-    const conn = await mongoose.connect(MONGO_URI, {
+    const conn = await mongoose.connect(targetUri, {
       serverSelectionTimeoutMS: 10000,
     });
     isConnected = true;
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB connection error: ${error.message}`);
-    console.log('⚠️  Running without database. Some features will not work.');
+    if (isProd) {
+      console.error('⚠️  Ensure your MongoDB Atlas network access IP whitelist (0.0.0.0/0) and credentials in MONGODB_URI are correct.');
+    }
   }
 };
 

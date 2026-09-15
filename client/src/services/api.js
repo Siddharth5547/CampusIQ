@@ -3,7 +3,8 @@ import axios from 'axios';
 const getBaseUrl = () => {
   // 1. Explicit production or custom API URL from environment variable
   if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
+    const envUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
   }
   // 2. Local Vite development server proxy
   if (typeof window !== 'undefined' && window.location.port === '5173') {
