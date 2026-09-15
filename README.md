@@ -797,8 +797,8 @@ The platform contains integrated visual assets and interactive preview component
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/your-username/CampusCare.git
-cd CampusCare
+git clone https://github.com/Siddharth5547/CampusIQ.git
+cd CampusIQ
 ```
 
 ---
@@ -923,22 +923,35 @@ npm run build
 
 ---
 
-## 👤 Author & License
+## 👤 Author & Contact
 
-**CampusCare Team**  
+**CampusIQ Team**  
 *Full-Stack Campus Maintenance & Operations Intelligence Platform*
 
-- **GitHub:** [@your-username](https://github.com/your-username)
-- **LinkedIn:** [Your Profile](https://linkedin.com/in/your-profile)
-- **Email:** `contact@campuscare.edu`
+- **GitHub:** [Siddharth5547](https://github.com/Siddharth5547/)
+- **LinkedIn:** [Siddharth Bharti](https://www.linkedin.com/in/siddharth2004/)
+- **Email:** [sbharti5547@gmail.com](mailto:sbharti5547@gmail.com)
 
-Distributed under the **MIT License**. See `LICENSE` for details.
+---
+
+## 📄 License
+
+© 2026 Siddharth Bharti. All Rights Reserved.
+
+This project is publicly available for portfolio and demonstration purposes only.
+
+The source code, design, UI/UX, architecture, and original implementation of CampusIQ
+may not be copied, modified, redistributed, republished, or used commercially
+without explicit permission from the author.
+
+For permission or collaboration requests, contact:  
+[sbharti5547@gmail.com](mailto:sbharti5547@gmail.com)
 
 <br/>
 
 <div align="center">
 
-**CampusCare — Report. Track. Resolve.**  
+**CampusIQ — Report. Track. Resolve.**  
 *Designed and engineered for accountable, high-performance campus operations.*
 
 </div>
