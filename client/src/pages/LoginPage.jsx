@@ -17,25 +17,58 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!form.email || !form.password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
     setLoading(true);
     try {
       const user = await login(form.email, form.password);
       toast.success(`Welcome back, ${user.name}!`);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      if (!err.response) {
+        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+      } else if (err.response.status === 401) {
+        setError(err.response.data?.message || 'Invalid email or password.');
+      } else if (err.response.status === 400) {
+        setError(err.response.data?.message || 'Please provide both email and password.');
+      } else if (err.response.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Login failed. Please check your credentials and try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const fillDemo = (role) => {
+  const fillDemo = async (role) => {
     const demos = {
       admin: { email: 'admin@campuscare.edu', password: 'Admin@123' },
       staff: { email: 'staff1@campuscare.edu', password: 'Staff@123' },
       student: { email: 'student1@campuscare.edu', password: 'Student@123' },
     };
-    setForm(demos[role]);
+    const creds = demos[role];
+    setForm(creds);
+    setError('');
+
+    setLoading(true);
+    try {
+      const user = await login(creds.email, creds.password);
+      toast.success(`Welcome back, ${user.name}!`);
+      navigate('/dashboard');
+    } catch (err) {
+      if (!err.response) {
+        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+      } else {
+        setError(err.response.data?.message || 'Demo login failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,8 +138,10 @@ const LoginPage = () => {
               {['admin', 'staff', 'student'].map(role => (
                 <button
                   key={role}
+                  type="button"
+                  disabled={loading}
                   onClick={() => fillDemo(role)}
-                  className="flex-1 py-2 px-2 rounded-lg bg-white border border-[#9F8170] text-[#3B3C36] text-xs font-semibold hover:bg-[#9F8170] hover:text-white transition-colors capitalize shadow-sm"
+                  className="flex-1 py-2 px-2 rounded-lg bg-white border border-[#9F8170] text-[#3B3C36] text-xs font-semibold hover:bg-[#9F8170] hover:text-white transition-colors capitalize shadow-sm disabled:opacity-50 cursor-pointer"
                 >
                   {role}
                 </button>

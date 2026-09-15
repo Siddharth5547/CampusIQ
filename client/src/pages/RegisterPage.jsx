@@ -47,7 +47,15 @@ const RegisterPage = () => {
       toast.success(`Welcome to CampusCare, ${user.name}!`);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      if (!err.response) {
+        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+      } else if (err.response.status === 409) {
+        setError(err.response.data?.message || 'An account with this email already exists.');
+      } else if (err.response.status === 400) {
+        setError(err.response.data?.message || 'Validation error. Please check your inputs.');
+      } else {
+        setError(err.response.data?.message || 'Registration failed. Please check your details and try again.');
+      }
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  const logout = useCallback(() => {
+    localStorage.removeItem('campuscare_token');
+    localStorage.removeItem('campuscare_user');
+    setUser(null);
+    setIsAuthenticated(false);
+  }, []);
+
   const loadUser = useCallback(async () => {
     const token = localStorage.getItem('campuscare_token');
     const savedUser = localStorage.getItem('campuscare_user');
@@ -27,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
     setLoading(false);
-  }, []);
+  }, [logout]);
 
   useEffect(() => {
     loadUser();
@@ -51,13 +58,6 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     setIsAuthenticated(true);
     return userData;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('campuscare_token');
-    localStorage.removeItem('campuscare_user');
-    setUser(null);
-    setIsAuthenticated(false);
   };
 
   const updateUser = (userData) => {
