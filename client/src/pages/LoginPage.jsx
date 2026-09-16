@@ -30,7 +30,10 @@ const LoginPage = () => {
       navigate('/dashboard');
     } catch (err) {
       if (!err.response) {
-        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+        const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+        setError(isLocal 
+          ? 'Unable to connect to server. Please ensure the backend is running on port 5000.'
+          : 'Unable to connect to server. Please check your internet connection or try again later.');
       } else if (err.response.status === 401) {
         setError(err.response.data?.message || 'Invalid email or password.');
       } else if (err.response.status === 400) {
@@ -62,7 +65,10 @@ const LoginPage = () => {
       navigate('/dashboard');
     } catch (err) {
       if (!err.response) {
-        setError('Unable to connect to server. Please ensure the backend is running on port 5000.');
+        const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+        setError(isLocal 
+          ? 'Unable to connect to server. Please ensure the backend is running on port 5000.'
+          : 'Unable to connect to server. Please check your internet connection or try again later.');
       } else {
         setError(err.response.data?.message || 'Demo login failed. Please try again.');
       }

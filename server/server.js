@@ -51,7 +51,85 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Health check
+// Connect to MongoDB and start server
+let cachedPromise = null;
+
+const ensureDefaultUsers = async () => {
+  try {
+    const User = require('./models/User');
+    const adminExists = await User.exists({ role: 'admin' });
+    if (!adminExists) {
+      console.log('Seeding default demo users...');
+      const defaultUsers = [
+        { name: 'Admin User', email: 'admin@campuscare.edu', password: 'Admin@123', role: 'admin', department: 'Administration' },
+        { name: 'Rajesh Kumar', email: 'staff1@campuscare.edu', password: 'Staff@123', role: 'staff', department: 'Electrical Department' },
+        { name: 'Priya Sharma', email: 'staff2@campuscare.edu', password: 'Staff@123', role: 'staff', department: 'Plumbing & Civil Department' },
+        { name: 'Arjun Mehta', email: 'student1@campuscare.edu', password: 'Student@123', role: 'student', studentId: 'STU2024001', department: 'Computer Science' }
+      ];
+      for (const u of defaultUsers) {
+        const exists = await User.exists({ email: u.email });
+        if (!exists) {
+          await User.create(u);
+        }
+      }
+      console.log('✅ Demo users created.');
+    }
+  } catch (err) {
+    console.error('Initial user seed notice:', err.message);
+  }
+};
+
+const connectDB = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (cachedPromise) {
+    return cachedPromise;
+  }
+
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+  if (!mongoUri) {
+    if (isProd) {
+      console.error('❌ MONGODB_URI is not configured in environment variables. Database connection aborted.');
+      return null;
+    }
+    console.warn('⚠️  MONGODB_URI not provided. Falling back to local MongoDB for development.');
+  }
+
+  const targetUri = mongoUri || 'mongodb://localhost:27017/campuscare';
+
+  cachedPromise = mongoose.connect(targetUri, {
+    serverSelectionTimeoutMS: 15000,
+  }).then(async (conn) => {
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    ensureDefaultUsers().catch(() => {});
+    return conn;
+  }).catch((error) => {
+    cachedPromise = null;
+    console.error(`❌ MongoDB connection error: ${error.message}`);
+    if (isProd) {
+      console.error('⚠️  Ensure your MongoDB Atlas network access IP whitelist (0.0.0.0/0) and credentials in MONGODB_URI are correct.');
+    }
+    throw error;
+  });
+
+  return cachedPromise;
+};
+
+// Ensure database connection for all incoming API requests (vital for serverless cold-starts)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    // Handled in individual controllers
+  }
+  next();
+});
+
+// Health check (mounted after connection middleware so it accurately reports readiness)
 app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     success: true,
@@ -60,47 +138,6 @@ app.get(['/health', '/api/health'], (req, res) => {
     timestamp: new Date().toISOString(),
     mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   });
-});
-
-// Connect to MongoDB and start server
-let isConnected = false;
-const connectDB = async () => {
-  if (isConnected || mongoose.connection.readyState === 1) {
-    return;
-  }
-  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
-  const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
-
-  if (!mongoUri) {
-    if (isProd) {
-      console.error('❌ MONGODB_URI is not configured in environment variables. Database connection aborted.');
-      return;
-    }
-    console.warn('⚠️  MONGODB_URI not provided. Falling back to local MongoDB for development.');
-  }
-
-  const targetUri = mongoUri || 'mongodb://localhost:27017/campuscare';
-
-  try {
-    const conn = await mongoose.connect(targetUri, {
-      serverSelectionTimeoutMS: 10000,
-    });
-    isConnected = true;
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB connection error: ${error.message}`);
-    if (isProd) {
-      console.error('⚠️  Ensure your MongoDB Atlas network access IP whitelist (0.0.0.0/0) and credentials in MONGODB_URI are correct.');
-    }
-  }
-};
-
-// Ensure database connection for requests (vital for serverless environments)
-app.use(async (req, res, next) => {
-  if (mongoose.connection.readyState !== 1) {
-    await connectDB();
-  }
-  next();
 });
 
 // API Routes

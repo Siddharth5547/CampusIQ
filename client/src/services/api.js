@@ -1,17 +1,17 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
-  // 1. Explicit production or custom API URL from environment variable
+  // 1. In browser production (any non-localhost domain), use relative '/api' for same-origin reliability
+  if (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')) {
+    return '/api';
+  }
+  // 2. Explicit custom API URL from environment variable
   if (import.meta.env.VITE_API_URL) {
     const envUrl = import.meta.env.VITE_API_URL.replace(/\/$/, '');
     return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
   }
-  // 2. Local Vite development server proxy
+  // 3. Local Vite development server proxy
   if (typeof window !== 'undefined' && window.location.port === '5173') {
-    return '/api';
-  }
-  // 3. Deployed production site (same origin /api)
-  if (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')) {
     return '/api';
   }
   // 4. Default local development backend
